@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MoodBeats</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+
+<aside class="side-gallery">
+  <img src="images/img1.jpeg">
+  <img src="images/img2.jpeg">
+  <img src="images/img3.jpeg">
+  <img src="images/img4.jpeg">
+</aside>
+
+<canvas id="particles"></canvas>
+<canvas id="frequencyWave"></canvas>
+
+<div class="container">
+  <h1>🎧 MoodBeats</h1>
+  <p class="subtitle">Feel your music. See the vibe.</p>
+
+  <div class="card upload-box" id="uploadBox">
+    🎵 Upload your song
+    <input type="file" id="fileInput" accept="audio/*" hidden>
+  </div>
+
+  <div class="card analyzing" id="analyzing">Analyzing...</div>
+
+  <div class="mood-pill" id="mood"></div>
+
+  <div class="card">
+    <h3>🎶 Recommended Songs</h3>
+    <div id="songList"></div>
+    <button id="downloadPlaylist" class="playlist-btn">
+      ⬇ Download Playlist
+    </button>
+  </div>
+
+  <audio id="player"></audio>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

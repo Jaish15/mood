@@ -1,0 +1,193 @@
+/* ================= GLOBAL RESET ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  background: radial-gradient(circle at top, #1b0033, #0b0f1a);
+  color: white;
+  overflow-x: hidden;
+  transition: background 0.4s, color 0.4s;
+}
+
+/* Light Mode */
+body.light {
+  background: linear-gradient(#f9f9f9, #dedede);
+  color: #111;
+}
+
+/* ================= THEME TOGGLE ================= */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #ff7ac6;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  z-index: 99;
+  box-shadow: 0 0 15px rgba(255,122,198,0.7);
+}
+
+/* ================= SIDE IMAGES ================= */
+.side-gallery {
+  position: fixed;
+  right: 20px;
+  top: 20%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 5;
+}
+
+.side-gallery img {
+  width: 90px;
+  height: 90px;
+  border-radius: 16px;
+  object-fit: cover;
+  box-shadow: 0 0 25px rgba(255,120,220,.6);
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+  100% { transform: translateY(0); }
+}
+
+/* ================= CANVAS ================= */
+#frequencyWave,
+#particles {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 260px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ================= MAIN CONTENT ================= */
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 50px 20px;
+  text-align: center;
+}
+
+/* Title */
+h1 {
+  font-size: 3rem;
+  background: linear-gradient(90deg, #ff7ac6, #7b7bff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Subtitle */
+.subtitle {
+  opacity: 0.85;
+  margin-bottom: 30px;
+}
+
+/* ================= CARDS ================= */
+.card {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 30px;
+  border-radius: 18px;
+  margin-bottom: 25px;
+  backdrop-filter: blur(12px);
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.02);
+}
+
+/* Upload Box */
+.upload-box {
+  border: 2px dashed rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+}
+
+.upload-box:hover {
+  border-color: #ff79c6;
+}
+
+/* Mood */
+.mood-pill {
+  display: none;
+  padding: 14px 40px;
+  border-radius: 40px;
+  background: linear-gradient(90deg, #ff4d6d, #ff85a2);
+  font-weight: bold;
+  box-shadow: 0 0 15px rgba(255, 122, 198, 0.8);
+}
+
+/* Songs */
+.song {
+  padding: 14px;
+  margin: 10px 0;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.song:hover {
+  transform: scale(1.05);
+  background: rgba(255,255,255,0.25);
+}
+
+.song.active {
+  background: linear-gradient(90deg, #ff5acd, #7a7cff);
+}
+
+/* Loading */
+.analyzing {
+  display: none;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: .4; }
+  50% { opacity: 1; }
+  100% { opacity: .4; }
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+  .side-gallery {
+    display: none;
+  }
+
+  .container {
+    padding: 30px 15px;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+  }
+}
+
+.playlist-btn {
+  margin-top: 20px;
+  padding: 14px 28px;
+  border-radius: 30px;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  background: linear-gradient(90deg, #ff7ac6, #7a7cff);
+  color: white;
+  box-shadow: 0 0 15px rgba(255, 122, 198, 0.6);
+  transition: 0.3s;
+}
+
+.playlist-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(255, 122, 198, 0.9);
+}
