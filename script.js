@@ -6,6 +6,7 @@ const moodText = document.getElementById("mood");
 const analyzing = document.getElementById("analyzing");
 const songList = document.getElementById("songList");
 const downloadBtn = document.getElementById("downloadPlaylist");
+const volumeSlider = document.getElementById("volumeSlider");
 
 const canvas = document.getElementById("frequencyWave");
 const ctx = canvas.getContext("2d");
@@ -21,6 +22,9 @@ analyser.connect(audioCtx.destination);
 
 analyser.fftSize = 256;
 const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+// ================= GLOBAL STATE =================
+let currentRecommendedSongs = [];
 
 // ================= RESIZE =================
 function resize() {
@@ -82,11 +86,12 @@ uploadBox.onclick = () => {
 fileInput.onchange = () => {
   if (!fileInput.files.length) return;
 
+  if (audioCtx.state === "suspended") audioCtx.resume();
+
   analyzing.style.display = "block";
   moodText.style.display = "none";
 
-  // Give UI time to render
-  setTimeout(() => processAudio(), 400);
+  setTimeout(processAudio, 400);
 };
 
 // ================= PROCESS AUDIO =================
@@ -96,36 +101,25 @@ function processAudio() {
   reader.onload = () => {
     audioCtx.decodeAudioData(reader.result, () => {
       const mood = detectMood();
-
-      setTimeout(() => {
-        analyzing.style.display = "none";
-        showMood(mood);
-      }, 600);
+      analyzing.style.display = "none";
+      showMood(mood);
     });
   };
 
   reader.readAsArrayBuffer(fileInput.files[0]);
 }
 
-// ================= MOOD DETECTION (FIXED) =================
+// ================= MOOD DETECTION =================
 function detectMood() {
-  const uploaded = fileInput.files[0].name
-    .toLowerCase()
-    .replace(/[^a-z0-9]/g, "");
+  const uploaded = fileInput.files[0].name.toLowerCase().replace(/[^a-z0-9]/g, "");
 
   for (const mood in recommendationjs) {
     for (const song of recommendationjs[mood]) {
-      const cleanName = song.name
-        .toLowerCase()
-        .replace(/[^a-z0-9]/g, "");
-
-      if (uploaded.includes(cleanName)) {
-        return mood;
-      }
+      const clean = song.name.toLowerCase().replace(/[^a-z0-9]/g, "");
+      if (uploaded.includes(clean)) return mood;
     }
   }
-
-  return "Love"; // safe fallback
+  return "Love";
 }
 
 // ================= SHOW MOOD =================
@@ -140,15 +134,12 @@ function loadSongs(mood) {
   songList.innerHTML = "";
 
   const uploaded = fileInput.files[0].name.toLowerCase();
-
-  let songs = recommendationjs[mood]
+  currentRecommendedSongs = recommendationjs[mood]
     .filter(s => !uploaded.includes(s.file.toLowerCase()))
     .sort(() => 0.5 - Math.random())
     .slice(0, 3);
 
-  currentRecommendedSongs = songs;
-
-  songs.forEach(song => {
+  currentRecommendedSongs.forEach(song => {
     const div = document.createElement("div");
     div.className = "song";
     div.textContent = "▶ " + song.name;
@@ -156,7 +147,6 @@ function loadSongs(mood) {
     div.onclick = async () => {
       if (audioCtx.state === "suspended") await audioCtx.resume();
 
-      // 🔁 TOGGLE PLAY / PAUSE
       if (audio.src.includes(song.file)) {
         if (audio.paused) {
           audio.play();
@@ -168,15 +158,13 @@ function loadSongs(mood) {
         return;
       }
 
-      // ▶ Play new song
       audio.src = song.file;
       audio.play();
       animate();
 
-      // Reset all
       document.querySelectorAll(".song").forEach(s => {
         s.classList.remove("active");
-        s.textContent = "▶ " + s.textContent.replace("⏸ ", "").replace("▶ ", "");
+        s.textContent = "▶ " + s.textContent.replace("▶ ", "").replace("⏸ ", "");
       });
 
       div.classList.add("active");
@@ -193,19 +181,17 @@ function animate() {
   analyser.getByteFrequencyData(dataArray);
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  const barWidth = (canvas.width / dataArray.length) * 2;
   let x = 0;
 
   for (let i = 0; i < dataArray.length; i++) {
     const h = dataArray[i];
     ctx.fillStyle = `hsl(${250 + h}, 85%, 60%)`;
-    ctx.fillRect(x, canvas.height - h, barWidth, h);
-    x += barWidth + 1;
+    ctx.fillRect(x, canvas.height - h, 4, h);
+    x += 6;
   }
 }
 
-// ================= DOWNLOAD PLAYLIST =================
+// ================= DOWNLOAD =================
 downloadBtn.onclick = async () => {
   if (!currentRecommendedSongs.length) return;
 
@@ -218,13 +204,6 @@ downloadBtn.onclick = async () => {
     folder.file(song.name + ".mp3", blob);
   }
 
-  let playlist = "#EXTM3U\n";
-  currentRecommendedSongs.forEach(song => {
-    playlist += `#EXTINF:-1,${song.name}\n${song.name}.mp3\n`;
-  });
-
-  folder.file("playlist.m3u", playlist);
-
   const zipBlob = await zip.generateAsync({ type: "blob" });
   const url = URL.createObjectURL(zipBlob);
 
@@ -232,15 +211,15 @@ downloadBtn.onclick = async () => {
   a.href = url;
   a.download = "MoodBeats_Playlist.zip";
   a.click();
-
-  URL.revokeObjectURL(url);
 };
 
-// ================= THEME =================
-function toggleTheme() {
-  document.body.classList.toggle("light");
-}
+// ================= VOLUME =================
+audio.volume = 0.8;
+volumeSlider.oninput = () => {
+  audio.volume = volumeSlider.value;
+};
 
+// ================= RESET =================
 audio.onended = () => {
   document.querySelectorAll(".song").forEach(s => {
     s.classList.remove("active");
