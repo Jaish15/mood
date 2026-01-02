@@ -2,47 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>MoodBeats</title>
+
   <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 
 <body>
 
+<!-- Theme Toggle -->
 <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
 
+<!-- Side Images -->
 <aside class="side-gallery">
-  <img src="images/img1.jpeg">
-  <img src="images/img2.jpeg">
-  <img src="images/img3.jpeg">
-  <img src="images/img4.jpeg">
+  <img src="images/img1.jpeg" alt="Mood image 1">
+  <img src="images/img2.jpeg" alt="Mood image 2">
+  <img src="images/img3.jpeg" alt="Mood image 3">
+  <img src="images/img4.jpeg" alt="Mood image 4">
 </aside>
 
+<!-- Visualizers -->
 <canvas id="particles"></canvas>
 <canvas id="frequencyWave"></canvas>
 
 <div class="container">
+
   <h1>🎧 MoodBeats</h1>
   <p class="subtitle">Feel your music. See the vibe.</p>
 
+  <!-- Upload -->
   <div class="card upload-box" id="uploadBox">
     🎵 Upload your song
-    <input type="file" id="fileInput" accept="audio/*" hidden>
+    <input type="file" id="fileInput" accept="audio/*" hidden />
   </div>
 
+  <!-- Analyzing -->
   <div class="card analyzing" id="analyzing">Analyzing...</div>
 
+  <!-- Mood Display -->
   <div class="mood-pill" id="mood"></div>
 
+  <!-- Recommendations -->
   <div class="card">
     <h3>🎶 Recommended Songs</h3>
+
     <div id="songList"></div>
+
+    <!-- Volume Control -->
+    <div class="volume-control">
+      <span>🔈</span>
+      <input 
+        type="range" 
+        id="volumeSlider" 
+        min="0" 
+        max="1" 
+        step="0.01" 
+        value="0.8"
+      >
+      <span>🔊</span>
+    </div>
+
+    <!-- Download -->
     <button id="downloadPlaylist" class="playlist-btn">
       ⬇ Download Playlist
     </button>
   </div>
 
+  <!-- Audio Player -->
   <audio id="player"></audio>
+
 </div>
 
 <script src="script.js"></script>
