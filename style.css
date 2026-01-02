@@ -191,3 +191,88 @@ h1 {
   transform: scale(1.05);
   box-shadow: 0 0 25px rgba(255, 122, 198, 0.9);
 }
+
+/* Volume Control */
+.volume-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.volume-control input[type="range"] {
+  width: 180px;
+  accent-color: #ff7ac6;
+  cursor: pointer;
+}
+
+.volume-control span {
+  font-size: 20px;
+}
+
+/* ================= IMPROVEMENTS & FIXES ================= */
+
+/* Upload box active feedback */
+.upload-box:active {
+  transform: scale(0.97);
+}
+
+/* Make upload clearly clickable */
+.upload-box::after {
+  content: "Click to choose a song 🎵";
+  display: block;
+  margin-top: 10px;
+  opacity: 0.7;
+  font-size: 14px;
+}
+
+/* Song playing highlight */
+.song.active {
+  box-shadow: 0 0 25px rgba(255, 100, 220, 0.9);
+  transform: scale(1.05);
+}
+
+/* Smooth icon animation when playing */
+.song.active::before {
+  content: "🎶 ";
+  animation: pulseIcon 1s infinite;
+}
+
+@keyframes pulseIcon {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+/* Better visual depth for wave */
+#frequencyWave {
+  filter: blur(0.4px) brightness(1.2);
+}
+
+/* Disable button look */
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Smooth transitions everywhere */
+* {
+  transition: background 0.3s, color 0.3s, transform 0.2s;
+}
+
+/* Volume control highlight */
+.volume-control input[type="range"]:hover {
+  filter: brightness(1.2);
+}
+
+/* Small screen tweaks */
+@media (max-width: 480px) {
+  .volume-control {
+    flex-direction: column;
+  }
+
+  .volume-control span {
+    font-size: 18px;
+  }
+}
